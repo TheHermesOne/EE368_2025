@@ -21,7 +21,13 @@ def register():
     if request.method == 'POST':
         email = request.form.get('email')
         psw = request.form.get('psw')
-        app.logger.info(f"Email: {email}, Password: {psw}")
+
+        if any(user["email"] == email for user in users):
+            return "Email already exists! Try another one."
+
+        users.append({"email": email, "password": psw})
+
+
     return render_template('register.html')
 
 @app.route('/changepassword')
