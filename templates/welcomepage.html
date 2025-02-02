@@ -2,15 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Welcome Page</title>
 </head>
 <body>
-
 {% if user %}
   <h1>Hello {{ user }}!</h1>
 {% else %}
-  <h1>Hello, Unknown User!</h1>
+  <h1>Hello, Unkown User!</h1>
 {% endif %}
-
+<a href="/logout">
+  <button>
+    Logout
+  </button>
+</a>
 </body>
 </html>
