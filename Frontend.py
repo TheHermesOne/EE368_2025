@@ -1,20 +1,21 @@
-from flask import Flask
+from flask import Flask, render_template
+
 app = Flask(__name__)
 @app.route('/')
-def home():
-    return "Login Page"
+def login():
+    return render_template('login.html')
 
-@app.route('/SignUp')
-def home():
-    return "Sgin Up Page"
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
-@app.route('/ResetPassword')
-def home():
-    return "Reset Password Page"
+@app.route('/changepassword')
+def changepassword():
+    return render_template('changepassword.html')
 
-@app.route('/Success')
-def home():
-    return "Sucess Page"
+@app.route('/welcomepage')
+def welcome():
+    return render_template('welcomepage.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
