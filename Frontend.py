@@ -11,13 +11,17 @@ def index():
 def login():
     if request.method == 'POST':
         if 'login' in request.form:
-            session['userEmail'] = request.form.get('mail')
+            session['userEmail'] = request.form.get('email')
             session['password'] = request.form.get('psw')
             return redirect(url_for('welcomepage',UserEmail=session['userEmail']))
     return render_template('login.html')
-@app.route('/signup')
-def signup():
-    return render_template('signup.html')
+@app.route('/signup', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        psw = request.form.get('psw')
+        app.logger.info(f"Email: {email}, Password: {psw}")
+    return render_template('register.html')
 
 @app.route('/changepassword')
 def changepassword():
