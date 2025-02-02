@@ -11,9 +11,10 @@ def index():
 def login():
     if request.method == 'POST':
         if 'login' in request.form:
-            session['userEmail'] = request.form.get('email')
+            session['userEmail']  = request.form.get('mail')
             session['password'] = request.form.get('psw')
-            return redirect(url_for('welcomepage',UserEmail=session['userEmail']))
+            app.logger.info(f"Username: {session['userEmail'] }")
+            return redirect(url_for('welcomepage',UserEmail=session['userEmail'] ))
     return render_template('login.html')
 @app.route('/signup', methods=['GET', 'POST'])
 def register():
