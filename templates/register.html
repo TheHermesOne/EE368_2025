@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+</head>
+<img src="https://directories.clarkson.edu/view_image.php?image_id=yuliu" alt="hi" width="700" height="50"/>
+<h1>Create an Account</h1>
+
+<body style="background-color: lightsteelblue;">
+
+<div class="container">
+   <form action="/signup" method="POST">
+
+    <label for="fname"><b>First Name</b></label>
+    <input type="text" id="fname" placeholder="Enter your First Name" name="fname" required>
+
+
+    <label for="lname"><b>Last Name</b></label>
+    <input type="text" id="lname" placeholder="your Last Name" name="lname" required>
+
+     <br> <br>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" id="email" placeholder="your Email" name="email" required>
+
+     <br> <br>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="text" id="psw" placeholder="Create a Password" name="psw" required>
+
+     <br> <br>
+
+    <button type="submit">Create Account</button>
+
+   </form>
+
+   <a href="/login"><button type="submit">Log in to Existing Account</button>
+
+  <p class="error" id="errorMessage"></p>
+
+    <span class="psw">Forgot <a href="#">password?</a></span>
+</div>
+
+   <script>
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const fname = document.getElementById('fname').value;
+        const lname = document.getElementById('lname').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('psw').value;
+
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        const emailExists = users.some(user => user.email === email);
+
+        if (emailExists) {
+            document.getElementById('errorMessage').textContent = "This email is already in use. Please choose another one.";
+        } else {
+            users.push({ fname, lname, email, password });
+            localStorage.setItem('users', JSON.stringify(users));
+
+            document.getElementById('registrationForm').reset();
+            document.getElementById('errorMessage').textContent = "";
+
+            alert("Account created successfully!");
+        }
+    }
+</script>
+
+</body>
+</html>

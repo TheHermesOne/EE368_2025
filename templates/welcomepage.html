@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome Page</title>
+</head>
+<body>
+{% if user %}
+  <h1>Hello {{ user }}!</h1>
+{% else %}
+  <h1>Hello, Unkown User!</h1>
+{% endif %}
+<img src="https://media1.tenor.com/m/R5IECfIf34YAAAAd/fish-spinning.gif" alt="Bruh">
+<br>
+<a href="/logout">
+  <button>
+    Logout
+  </button>
+</a>
+</body>
+</html>
