@@ -1,11 +1,13 @@
 [project]
-name = "OauthApp"
+name = "EE368_2025"
 dependencies = [
     "flask",
     "requests",
     "flask_sqlalchemy",
     "flask_bcrypt",
 ]
+version = "0.1"
+description = "An Oautharation project for EE368"
 
 [build-system]
 requires = ["flit_core<4"]

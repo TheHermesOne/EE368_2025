@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from OauthApp import app
+from EE368_2025 import app
 
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://scottts:Stella%400143@localhost/flask_db'
