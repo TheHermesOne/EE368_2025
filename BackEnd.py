@@ -1,3 +1,4 @@
+import flask
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -9,14 +10,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
-class Users(db.Model):
+class Users(db.Model, flask.Flask):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(30), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
 
-    def __init__(self, first_name, last_name, email, password_hash):
+    def __init__(self, app, first_name, last_name, email, password_hash):
+        self.app = app
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
