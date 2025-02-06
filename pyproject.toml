@@ -1,0 +1,12 @@
+[project]
+name = "OauthApp"
+dependencies = [
+    "flask",
+    "requests",
+    "flask_sqlalchemy",
+    "flask_bcrypt",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
