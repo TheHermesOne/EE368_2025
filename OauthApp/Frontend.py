@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
+from OauthApp import app
 
-app = Flask(__name__)
 app.secret_key = 'gnbgjnbvgjnvfynbvfyjnvfkmnvghkm;09654'
 
 BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
