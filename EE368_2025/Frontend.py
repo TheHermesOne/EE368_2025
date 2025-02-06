@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
-from OauthApp import app
+from EE368_2025 import app
 
 app.secret_key = 'gnbgjnbvgjnvfynbvfyjnvfkmnvghkm;09654'
 
