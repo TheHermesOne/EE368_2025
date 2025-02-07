@@ -48,7 +48,7 @@
     <div class="container">
         <h1 style="color: blue"> Forgot Password? </h1>
         <label for ="email"><b>Email</b></label>
-        <input type="text" id="email" placeholder="your Email used to create account" name="mail" required>
+        <input type="text" id="email" placeholder="Email used to create account" name="mail" required>
   <br> <br>
     <label for="newpsw"><b>New Password</b></label>
     <input type="text" id="newpsw" placeholder="Create a new Password" name="newpsw" required>
@@ -58,6 +58,11 @@
 
         <p id="error_message" class="error" style="display: none">Passwords Do Not Match!</p>
         <button type="submit">Reset Password</button>
+        <div style='padding-top: 10px'>
+        <span> <a href="/login">Login</a></span>
+        <span> | </span>
+        <span> <a href="/signup">Signup</a></span>
+        </div>
     </div>
    </form>
 

@@ -6,8 +6,24 @@
 </head>
 
 <style>
-body {font-family: Arial, Helvetica, sans-serif;}
-form {border: 3px solid #f1f1f1;}
+body {
+    background-color:#f1f1f1; ;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+ .container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 320px;
+    text-align: center;
+}
 
 input[type=text], input[type=password] {
   width: 100%;
@@ -32,19 +48,15 @@ button:hover {
   opacity: 0.8;
 }
 
-
-.container {
-    padding: 10px;
-}
 .sign{
-  align-self: center;
-  background-color: #0FFfFF;
+  align-items: center;
+  border-radius: 5px;
+  /*justify-content: center;*/
+  background-color: aqua;
   color: black;
-  padding: 10px   10px;
-  margin: 0px 0;
-  border: none;
+  padding: 5px 10px;
   cursor: pointer;
-  width: 10%;
+  width: 50%;
 }
 
 span.psw {
@@ -60,10 +72,11 @@ margin: auto;
 
 
 {% block body %}
-  <h1>Login</h1>
+
 <body style="background-color: #141ac4">
-<form action="/login" method="post">
   <div class="container" >
+          <h1>Login</h1>
+    <form action="/login" method="post">
     <label for="mail"><b>Email</b></label>
     <input type="text" placeholder="Enter email" name="mail" required>
 
@@ -77,17 +90,17 @@ margin: auto;
     {% endfor %}
   {% endif %}
     {% endwith %}
-
-    <button type="submit" name="login" >Login</button>
     <label>
       <input type="checkbox" checked="checked" name="remember"> Remember me
     </label>
-  </div>
+    <button type="submit" name="login" >Login</button>
   </form>
-  <div class="container" style="background-color:#f1f1f1">
-    <span class="psw">Forgot <a href="/changePassword">password?</a></span>
     <a href="/signup"> <button class="sign">Sign up</button></a>
-  </div>
+    <br><br>
+        <span class="psw">Forgot <a href="/changePassword">password?</a></span>
+
+
+ </div>
 </body>
 {% endblock %}
 </html>
