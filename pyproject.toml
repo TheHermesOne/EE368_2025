@@ -5,6 +5,7 @@ dependencies = [
     "requests",
     "flask_sqlalchemy",
     "flask_bcrypt",
+    "mysql-connector-python"
 ]
 version = "0.1"
 description = "An Oautharation project for EE368"
