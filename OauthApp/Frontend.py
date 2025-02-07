@@ -40,7 +40,7 @@ def register():
         last_name = request.form.get('lname')
         email = request.form.get('mail')
         password = request.form.get('psw')
-        print(email, password, first_name, last_name)
+
         # Call backend to create a new user
         response = requests.post(f"{BACKEND_URL}/api/signup", json={
             'first_name': first_name,
@@ -69,6 +69,22 @@ def logout():
     session.pop('UserData', None)
     return redirect(url_for('index'))
 
+@app.route('/changePassword', methods=['GET', 'POST'])
+def changePassword():
+    if request.method == 'POST':
+        email = request.form.get('mail')
+        password = request.form.get('psw')
+
+        response = requests.post(f"{BACKEND_URL}/api/changePassword", json={
+            "email": email,
+            "password": password
+        })
+        data = response.json()
+        if response.status_code == 200:
+            flash("Password changed successfully!")
+        else:
+            flash(data.get("message", "Password change failed"))
+        return redirect(url_for('changePassword.html'))
 
 if __name__ == "__main__":
     app.run(debug=True)
