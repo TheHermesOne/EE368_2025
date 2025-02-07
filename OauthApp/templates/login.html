@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login Page</title>
 </head>
+
 <style>
 body {font-family: Arial, Helvetica, sans-serif;}
 form {border: 3px solid #f1f1f1;}
@@ -50,9 +51,16 @@ span.psw {
   align-self: center;
   padding-top: 16px;
 }
+strong.error{
+margin: auto;
+  color: red;
+}
 
 </style>
 
+
+{% block body %}
+  <h1>Login</h1>
 <body style="background-color: #141ac4">
 <form action="/login" method="post">
   <div class="container" >
@@ -61,6 +69,14 @@ span.psw {
 
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <strong class="error">{{ message }}</strong>
+    {% endfor %}
+  {% endif %}
+    {% endwith %}
 
     <button type="submit" name="login" >Login</button>
     <label>
@@ -72,6 +88,6 @@ span.psw {
     <span class="psw">Forgot <a href="#">password?</a></span>
     <a href="/signup"> <button class="sign">Sign up</button></a>
   </div>
-
 </body>
+{% endblock %}
 </html>

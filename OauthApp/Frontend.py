@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
-from EE368_2025 import app
+from OauthApp import app
 
 app.secret_key = 'gnbgjnbvgjnvfynbvfyjnvfkmnvghkm;09654'
 
@@ -10,7 +10,7 @@ BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
 @app.route('/')
 def index():
     if 'userEmail' in session:
-        return redirect(url_for('welcomepage', UserEmail=session["userEmail"]))
+        return redirect(url_for('welcomepage'))
     return redirect(url_for('login'))
 
 
@@ -20,13 +20,14 @@ def login():
         email = request.form.get('mail')
         password = request.form.get('psw')
 
-        # Call backend for authentication
         response = requests.post(f"{BACKEND_URL}/api/login", json={"email": email, "password": password})
         data = response.json()
-
+        print(data)
         if response.status_code == 200:
             session['userEmail'] = email
-            return redirect(url_for('welcomepage', UserEmail=email))
+            session['UserData'] = data
+            print(session['UserData'])
+            return redirect(url_for('welcomepage'))
         else:
             flash(data.get("message", "Login failed"))
 
@@ -40,10 +41,10 @@ def register():
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('psw')
-
+        print(email, password, first_name, last_name)
         # Call backend to create a new user
         response = requests.post(f"{BACKEND_URL}/api/signup", json={
-            "first_name": first_name,
+            'first_name': first_name,
             "last_name": last_name,
             "email": email,
             "password": password
@@ -59,9 +60,9 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/welcomepage/<UserEmail>')
-def welcomepage(UserEmail=None):
-    return render_template('welcomepage.html', user=UserEmail)
+@app.route('/welcomepage/')
+def welcomepage():
+    return render_template('welcomepage.html', )# This is Broken but it works for the time being
 
 
 @app.route('/logout')

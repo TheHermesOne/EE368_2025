@@ -1,5 +1,5 @@
 [project]
-name = "EE368_2025"
+name = "OauthApp"
 dependencies = [
     "flask",
     "requests",
