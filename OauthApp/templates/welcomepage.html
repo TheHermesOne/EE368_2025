@@ -5,8 +5,11 @@
     <title>Welcome Page</title>
 </head>
 <body>
-{% if user %}
-  <h1>Hello {{ user }}!</h1>
+{% if user_data %}
+  <h1>Hello {{ user_data.first_name }} {{user_data.last_name}} !</h1>
+    <p>First Name: {{ user_data.first_name }} </p>
+    <p>Last Name: {{ user_data.last_name }} </p>
+    <p>User Email: {{ user_data.email }} </p>
 {% else %}
   <h1>Hello, Unkown User!</h1>
 {% endif %}
