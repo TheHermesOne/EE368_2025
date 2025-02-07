@@ -2,16 +2,16 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import requests
 from OauthApp import app
 
-app.secret_key = 'gnbgjnbvgjnvfynbvfyjnvfkmnvghkm;09654'
 
 BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
 
 
 @app.route('/')
 def index():
-    if 'userEmail' in session:
-        return redirect(url_for('welcomepage'))
-    return redirect(url_for('login'))
+    if 'UserData' in session and 'email' in session['UserData']:
+        return redirect(url_for('welcomepage',User = session['UserData']['first_name']))
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -24,10 +24,9 @@ def login():
         data = response.json()
         print(data)
         if response.status_code == 200:
-            session['userEmail'] = email
             session['UserData'] = data
             print(session['UserData'])
-            return redirect(url_for('welcomepage'))
+            return redirect(url_for('welcomepage',User = session['UserData']['first_name']))
         else:
             flash(data.get("message", "Login failed"))
 
@@ -60,14 +59,14 @@ def register():
     return render_template('register.html')
 
 
-@app.route('/welcomepage/')
-def welcomepage():
-    return render_template('welcomepage.html', )# This is Broken but it works for the time being
+@app.route('/welcomepage/<User>')
+def welcomepage(User = None):
+    return render_template('welcomepage.html',user_data = session['UserData'] )
 
 
 @app.route('/logout')
 def logout():
-    session.pop('userEmail', None)
+    session.pop('UserData', None)
     return redirect(url_for('index'))
 
 
