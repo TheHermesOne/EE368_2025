@@ -2,8 +2,8 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
-mysqlUser = 'username'
-mysqlPass = 'qwe123qwe'
+mysqlUser = 'lamontad'
+mysqlPass = 'Whateves28!'
 
 app = Flask(__name__)
 app.secret_key = 'gnbgjnbvgjnvfynbvfyjnvfkmnvghkm;09654'

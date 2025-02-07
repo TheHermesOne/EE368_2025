@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+         .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        button {
+            background-color: #228ad0;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    input[type=text], input[type=password] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+  </style>
+
+<body>
+    <h1> Forgot Password? </h1>
+   <form action="/forgotpw" method="POST">
+    <div class="container">
+        <label for ="email"><b>Email</b></label>
+        <input type="text" id="email" placeholder="your Email used to create account" name="mail" required>
+  <br> <br>
+    <label for="newpsw"><b>New Password</b></label>
+    <input type="text" id="newpsw" placeholder="Create a new Password" name="newpsw" required>
+<br> <br>
+    <label for="cpsw"><b>Confirm Password</b></label>
+    <input type="text" id="cpsw" placeholder=" Confirm New Password" name="newpsw" required>
+
+<p id="error_message" class="error">Passwords Do Not Match!</p>
+        <button type="submit">Reset Password</button>
+    </div>
+   </form>
+
+    <script>
+      function valid_psw() {
+    let newpsw = document.getElementById("newpsw").value;
+    let cpsw = document.getElementById("cpsw").value;
+    let errorMessage = document.getElementById("error_message");
+
+    if (npsw !== cpsw) {
+        errorMessage.style.display = "block";
+        return false; // Prevent form submission
+    } else {
+        errorMessage.style.display = "none";
+        return true;
+    }
+}
+    </script>
+</body>
+
+</html>

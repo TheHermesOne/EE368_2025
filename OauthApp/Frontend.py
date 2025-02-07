@@ -38,7 +38,7 @@ def register():
     if request.method == 'POST':
         first_name = request.form.get('fname')
         last_name = request.form.get('lname')
-        email = request.form.get('email')
+        email = request.form.get('mail')
         password = request.form.get('psw')
         print(email, password, first_name, last_name)
         # Call backend to create a new user
