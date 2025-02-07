@@ -73,18 +73,19 @@ def logout():
 def changePassword():
     if request.method == 'POST':
         email = request.form.get('mail')
-        password = request.form.get('psw')
-
+        password = request.form.get('newpsw')
         response = requests.post(f"{BACKEND_URL}/api/changePassword", json={
             "email": email,
             "password": password
         })
         data = response.json()
+        print(response.status_code)
         if response.status_code == 200:
             flash("Password changed successfully!")
+            return redirect(url_for('login'))
         else:
             flash(data.get("message", "Password change failed"))
-        return redirect(url_for('changePassword.html'))
+    return render_template('forgotpw.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

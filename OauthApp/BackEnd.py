@@ -50,7 +50,8 @@ def change_password():
     data = request.json
     existing_user = Users.query.filter_by(email=data['email']).first()
     if existing_user:
-        existing_user.password_hash = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        existing_user.password_hash= bcrypt.generate_password_hash(data['password']).decode('utf-8')
+        db.session.commit()
         return jsonify({"message": "Password changed successfully"}), 200
     else:
         return jsonify({"message": "No Email registered"}), 400

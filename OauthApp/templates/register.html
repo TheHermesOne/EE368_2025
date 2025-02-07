@@ -63,47 +63,21 @@
     <input type="text" id="psw" placeholder="Create a Password" name="psw" required>
 
      <br> <br>
-
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <strong class="error">{{ message }}</strong>
+    {% endfor %}
+  {% endif %}
+    {% endwith %}
     <button type="submit">Create Account</button>
 
    </form>
-
    <a href="/login">
        <button type="submit">Log in to Existing Account</button>
    </a>
-
-    <p class="error" id="errorMessage"></p>
-
     <span class="psw">Forgot <a href="#">password?</a> </span>
 </div>
-
-   <script>
-
-    function handleSubmit(event) {
-        event.preventDefault();
-
-        const fname = document.getElementById('fname').value;
-        const lname = document.getElementById('lname').value;
-        const mail = document.getElementById('email').value;
-        const password = document.getElementById('psw').value;
-
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-
-        const emailExists = users.some(user => user.email === email);
-
-        if (emailExists) {
-            document.getElementById('errorMessage').textContent = "This email is already in use. Please choose another one.";
-        } else {
-            users.push({ fname, lname, email, password });
-            localStorage.setItem('users', JSON.stringify(users));
-
-            document.getElementById('registrationForm').reset();
-            document.getElementById('errorMessage').textContent = "";
-
-            alert("Account created successfully!");
-        }
-    }
-</script>
 
 </body>
 </html>
