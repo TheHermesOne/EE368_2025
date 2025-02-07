@@ -67,6 +67,33 @@ strong.error{
 margin: auto;
   color: red;
 }
+img{
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    top: 0;
+    left: 0;
+}
+.bounce{
+  animation:bounce 30s linear 100;
+  }
+@keyframes bounce {
+  0% {
+    transform: translate(0, 0); /* Start at the top-left corner */
+  }
+  25% {
+    transform: translate(calc(100vw - 100px), calc(100vh - 100px));/* Top-right corner */
+  }
+  50% {
+     transform: translate(calc(100vw - 100px), 0); /* Bottom-right corner */
+  }
+  75% {
+    transform: translate(0, calc(100vh - 100px)); /* Bottom-left corner */
+  }
+  100% {
+    transform: translate(0, 0); /* Back to top-left corner */
+  }
+}
 
 </style>
 
@@ -90,9 +117,9 @@ margin: auto;
     {% endfor %}
   {% endif %}
     {% endwith %}
-    <label>
-      <input type="checkbox" checked="checked" name="remember"> Remember me
-    </label>
+<!--    <label>-->
+<!--      <input type="checkbox" checked="checked" name="remember"> Remember me-->
+<!--    </label>-->
     <button type="submit" name="login" >Login</button>
   </form>
     <a href="/signup"> <button class="sign">Sign up</button></a>
@@ -102,5 +129,6 @@ margin: auto;
 
  </div>
 </body>
+<img class="bounce" src="https://cdn.sanity.io/images/bl383u0v/production/b8bf3938336ab457e1045e90fe737ce0c59f1cde-1500x1000.jpg?rect=0,106,1500,788&w=1200&h=630&q=70&fit=crop&auto=format"></img>
 {% endblock %}
 </html>
