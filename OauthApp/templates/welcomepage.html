@@ -6,10 +6,17 @@
 </head>
 <body>
 {% if user_data %}
+    {% if user_data.first_name %}
+        {% if user_data.last_name %}
   <h1>Hello {{ user_data.first_name }} {{user_data.last_name}} !</h1>
     <p>First Name: {{ user_data.first_name }} </p>
     <p>Last Name: {{ user_data.last_name }} </p>
     <p>User Email: {{ user_data.email }} </p>
+        {% endif %}
+    {% else %}
+    <h1>Hello {{ user_data.login }} !</h1>
+    <p>User Email: {{ user_data.email }} </p>
+    {% endif %}
 {% else %}
   <h1>Hello, Unkown User!</h1>
 {% endif %}

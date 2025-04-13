@@ -1,11 +1,22 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
 from OauthApp import app
+from authlib.integrations.flask_client import OAuth
+
 
 
 BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
 
-
+oauth = OAuth(app)
+github = oauth.register(
+name='github',
+client_id='Ov23lik1vP32ryWXacGW',
+client_secret='5cda03c8137f3225e6261352ddfc86c977645611',
+access_token_url='https://github.com/login/oauth/access_token',
+authorize_url='https://github.com/login/oauth/authorize',
+api_base_url='https://api.github.com/',
+client_kwargs={'scope': 'user:email'},
+)
 @app.route('/')
 def index():
     if 'UserData' in session and 'email' in session['UserData']:
@@ -32,6 +43,22 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/githubLogin')
+def githublogin():
+   return github.authorize_redirect(url_for('authorize', _external=True))
+
+
+@app.route('/login/callback')
+def authorize():
+   token = github.authorize_access_token()
+   resp = github.get('user', token=token)
+   emailresp = github.get('user/emails', token=token)
+   email = emailresp.json()
+   user_info = resp.json()
+   primary_email = next((e['email'] for e in email if e.get('primary')), None)
+   user_info['email'] = primary_email
+   session['userData'] = user_info
+   return redirect(url_for('welcomepage',User = session['userData']['login']))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def register():
@@ -61,7 +88,7 @@ def register():
 
 @app.route('/welcomepage/<User>')
 def welcomepage(User = None):
-    return render_template('welcomepage.html',user_data = session['UserData'] )
+    return render_template('welcomepage.html',user_data = session['userData'] )
 
 
 @app.route('/logout')
