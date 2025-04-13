@@ -1,9 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import requests
 from OauthApp import app
+from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import WebApplicationClient
+import json
+import os
+from OauthApp import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL, REDIRECT_URI
 from authlib.integrations.flask_client import OAuth
 
-
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
 
@@ -17,6 +22,7 @@ authorize_url='https://github.com/login/oauth/authorize',
 api_base_url='https://api.github.com/',
 client_kwargs={'scope': 'user:email'},
 )
+
 @app.route('/')
 def index():
     if 'UserData' in session and 'email' in session['UserData']:
@@ -43,6 +49,58 @@ def login():
 
     return render_template('login.html')
 
+
+def get_google_provider_cfg():
+    return requests.get(GOOGLE_DISCOVERY_URL).json()
+
+@app.route("/login/google")
+def google_login():
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=REDIRECT_URI,
+        scope=["openid", "email", "profile"],
+    )
+    return redirect(request_uri)
+
+@app.route("/callback/google")
+def callback():
+    code = request.args.get("code")
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=REDIRECT_URI,
+        code=code
+    )
+
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+
+    client.parse_request_body_response(json.dumps(token_response.json()))
+
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    uri, headers, body = client.add_token(userinfo_endpoint)
+    userinfo_response = requests.get(uri, headers=headers, data=body)
+
+    user_info = userinfo_response.json()
+
+    # Store user info in session
+    session['UserData'] = {
+        "email": user_info["email"],
+        "first_name": user_info.get("given_name", ""),
+        "last_name": user_info.get("family_name", ""),
+        "userID": user_info.get("sub")
+    }
+
+    return redirect(url_for('welcomepage', User=session['UserData']['first_name']))
 @app.route('/githubLogin')
 def githublogin():
    return github.authorize_redirect(url_for('authorize', _external=True))
@@ -57,7 +115,13 @@ def authorize():
    user_info = resp.json()
    primary_email = next((e['email'] for e in email if e.get('primary')), None)
    user_info['email'] = primary_email
-   session['userData'] = user_info
+   session['UserData'] = {
+       "email": user_info['email'],
+       "first_name": user_info.get("name", ""),
+       "last_name": "",
+       "userID": user_info["id"],
+       "login": user_info.get("login", "")
+   }
    return redirect(url_for('welcomepage',User = session['userData']['login']))
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -88,7 +152,7 @@ def register():
 
 @app.route('/welcomepage/<User>')
 def welcomepage(User = None):
-    return render_template('welcomepage.html',user_data = session['userData'] )
+    return render_template('welcomepage.html',user_data = session['UserData'] )
 
 
 @app.route('/logout')

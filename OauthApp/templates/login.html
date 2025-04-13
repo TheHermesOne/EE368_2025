@@ -110,7 +110,6 @@ img{
     <form action="/login" method="post">
     <label for="mail"><b>Email</b></label>
     <input type="text" placeholder="Enter email" name="mail" required>
-
     <label for="psw"><b>Password</b></label>
     <input type="password" placeholder="Enter Password" name="psw" required>
 
@@ -127,7 +126,8 @@ img{
     <button type="submit" name="login" >Login</button>
   </form>
     <a href="/signup"> <button class="sign">Sign up</button></a>
-    <br><br>
+    <br><a href="/githubLogin"> Login With Github</a>    <a href="{{ url_for('google_login') }}">Login with Google</a>
+<br>
         <span class="psw">Forgot <a href="/changePassword">password?</a></span>
 
 
