@@ -11,7 +11,10 @@
 
 <style>
 body {
-    background-color:#f1f1f1; ;
+    background-color:#f1f1f1;
+    background-image: url('https://www.shutterstock.com/image-vector/white-blue-gradient-clear-sky-600nw-2484094343.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
@@ -39,7 +42,7 @@ input[type=text], input[type=password] {
 }
 
 button {
-  background-color: #04AA6D;
+  background-color: #4476b8;
   color: white;
   padding: 14px 20px;
   margin: 8px 0;
@@ -56,8 +59,8 @@ button:hover {
   align-items: center;
   border-radius: 5px;
   /*justify-content: center;*/
-  background-color: aqua;
-  color: black;
+  background-color: #4476b8;
+  color: white;
   padding: 5px 10px;
   cursor: pointer;
   width: 50%;
@@ -78,12 +81,6 @@ img{
     top: 0;
     left: 0;
 }
-.bounce{
-  animation:bounce 30s linear 100;
-  }
-@keyframes bounce {
-  0% {
-    transform: translate(0, 0); /* Start at the top-left corner */
   }
   25% {
     transform: translate(calc(100vw - 100px), calc(100vh - 100px));/* Top-right corner */
@@ -104,7 +101,7 @@ img{
 
 {% block body %}
 
-<body style="background-color: #141ac4">
+<body style="background-color: #80afd9">
   <div class="container" >
           <h1>Login</h1>
     <form action="/login" method="post">
@@ -128,11 +125,9 @@ img{
     <a href="/signup"> <button class="sign">Sign up</button></a>
     <br><a href="/githubLogin"> Login With Github</a>    <a href="{{ url_for('google_login') }}">Login with Google</a>
 <br>
-        <span class="psw">Forgot <a href="/changePassword">password?</a></span>
-
+        <span class="psw"> <a href="/changePassword">Forgot password?</a></span>
 
  </div>
 </body>
-<img class="bounce" src="https://cdn.sanity.io/images/bl383u0v/production/b8bf3938336ab457e1045e90fe737ce0c59f1cde-1500x1000.jpg?rect=0,106,1500,788&w=1200&h=630&q=70&fit=crop&auto=format"></img>
 {% endblock %}
 </html>
