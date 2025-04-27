@@ -56,5 +56,18 @@ def change_password():
     else:
         return jsonify({"message": "No Email registered"}), 400
 
+@app.route('/api/newnames', methods=['POST'])
+def newnames():
+    data = request.json
+    existing_user = Users.query.filter_by(email=data['email']).first()
+    if existing_user:
+        existing_user.first_name = data['first_name']
+        existing_user.last_name = data['last_name']
+        db.session.commit()
+        return jsonify({"message": "Name changes were successful"}), 200
+    else:
+        return jsonify({"message": "No Email registered"}), 400
+
+
 if __name__ == '__main__':
     app.run(debug=True)
