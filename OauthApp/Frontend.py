@@ -181,7 +181,7 @@ def changePassword():
 
 
 @app.route('/newnames', methods=['GET', 'POST'])
-def changePassword():
+def newnames():
     if request.method == 'POST':
         email = request.form.get('mail')
         fname = request.form.get('newfname')
