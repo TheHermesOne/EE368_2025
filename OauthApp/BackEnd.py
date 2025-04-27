@@ -5,10 +5,11 @@ from OauthApp import *
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(20), nullable=False)
-    last_name = db.Column(db.String(20), nullable=False)
+    first_name = db.Column(db.String(20), nullable=True)
+    last_name = db.Column(db.String(20), nullable=True)
     email = db.Column(db.String(30), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=False)
+    password_hash = db.Column(db.String(200), nullable=True)
+    oauth_token = db.Column(db.String(500), nullable=True)  # Store GitHub/Google token
 
 with app.app_context():
     try:
@@ -55,6 +56,33 @@ def change_password():
         return jsonify({"message": "Password changed successfully"}), 200
     else:
         return jsonify({"message": "No Email registered"}), 400
+
+@app.route('/api/oauth_login', methods=['POST'])
+def oauth_login():
+    data = request.json
+    email = data['email']
+    first_name = data['first_name']
+    last_name = data['last_name']
+    oauth_token = data['oauth_token']
+
+    user = Users.query.filter_by(email=email).first()
+
+    if user:
+        # If user exists, optionally update their OAuth token
+        user.oauth_token = oauth_token
+    else:
+        # Create a new user
+        new_user = Users(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password_hash=None,  # No password for OAuth users
+            oauth_token=oauth_token
+        )
+        db.session.add(new_user)
+
+    db.session.commit()
+    return jsonify({"message": "OAuth user saved successfully"}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -25,8 +25,9 @@ client_kwargs={'scope': 'user:email'},
 
 @app.route('/')
 def index():
-    if 'UserData' in session and 'email' in session['UserData']:
-        return redirect(url_for('welcomepage',User = session['UserData']['first_name']))
+    user_data = session.get('UserData')
+    if user_data and user_data.get('first_name'):
+        return redirect(url_for('welcomepage', User=user_data['first_name']))
     else:
         return redirect(url_for('login'))
 
@@ -100,6 +101,14 @@ def callback():
         "userID": user_info.get("sub")
     }
 
+    requests.post(f"{BACKEND_URL}/api/oauth_login", json={
+        "email": user_info["email"],
+        "first_name": user_info.get("given_name", ""),
+        "last_name": user_info.get("family_name", ""),
+        "oauth_token": token_response.json()['access_token']
+
+    })
+
     return redirect(url_for('welcomepage', User=session['UserData']['first_name']))
 @app.route('/githubLogin')
 def githublogin():
@@ -122,7 +131,14 @@ def authorize():
        "userID": user_info["id"],
        "login": user_info.get("login", "")
    }
-   return redirect(url_for('welcomepage',User = session['userData']['login']))
+
+   requests.post(f"{BACKEND_URL}/api/oauth_login", json={
+       "email": user_info["email"],
+       "first_name": user_info.get("login", ""),  # use their GitHub username as first_name
+       "last_name": "",  # GitHub doesn't really give a last name separately
+       "oauth_token": token['access_token']
+   })
+   return redirect(url_for('welcomepage',User = session['UserData']['login']))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def register():
@@ -157,7 +173,7 @@ def welcomepage(User = None):
 
 @app.route('/logout')
 def logout():
-    session.pop('UserData', None)
+    session.clear()
     return redirect(url_for('index'))
 
 @app.route('/changePassword', methods=['GET', 'POST'])

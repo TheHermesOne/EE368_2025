@@ -18,7 +18,7 @@
     <p>User Email: {{ user_data.email }} </p>
     {% endif %}
 {% else %}
-  <h1>Hello, Unkown User!</h1>
+  <h1>Hello, Unknown User!</h1>
 {% endif %}
 <img src="https://media1.tenor.com/m/R5IECfIf34YAAAAd/fish-spinning.gif" alt="Bruh">
 <br>
@@ -27,5 +27,26 @@
     Logout
   </button>
 </a>
+
+<!-- 🛡️ Inactivity Auto-Logout Script -->
+<script>
+let inactivityTimer;
+const inactivityLimit = 30* 60 * 1000; // 30 minutes
+
+function resetInactivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+        alert("You have been inactive for 30 minutes. Logging out...");
+        window.location.href = "/logout";
+    }, inactivityLimit);
+}
+
+window.onload = resetInactivityTimer;
+document.onmousemove = resetInactivityTimer;
+document.onkeypress = resetInactivityTimer;
+document.onscroll = resetInactivityTimer;
+document.onclick = resetInactivityTimer;
+</script>
+
 </body>
 </html>
