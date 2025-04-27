@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+
+    <style>
+        body {
+            background-color:#f1f1f1;
+            background-image: url('https://www.shutterstock.com/image-vector/white-blue-gradient-clear-sky-600nw-2484094343.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+         .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        button {
+            background-color: #228ad0;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    input[type=text], input[type=fname] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    input[type=text], input[type=lname] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+  </style>
+
+<body>
+   <form action="/newnames" method="POST" onsubmit= "return newfname, newlname">
+    <div class="container">
+        <h1 style="color: black"> Set/Change Names? </h1>
+        <label for ="email"><b>Email</b></label>
+        <input type="text" id="email" placeholder="Email used to create account" name="mail" required>
+  <br> <br>
+    <label for="newfname"><b>New First Name</b></label>
+    <input type="text" id="newfname" placeholder="New First Name" name="newfname" required>
+<br> <br>
+    <label for="newlname"><b>New Last Name</b></label>
+    <input type="text" id="newlname" placeholder="New Last Name" name="newlname" required>
+
+        <button type="submit"> New Name </button>
+        <div style='padding-top: 10px'>
+        <span> <a href="/login">Login</a></span>
+        <span> | </span>
+        <span> <a href="/signup">Signup</a></span>
+        </div>
+    </div>
+   </form>
+
+</body>
+
+</html>
