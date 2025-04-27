@@ -7,6 +7,7 @@ import json
 import os
 from OauthApp import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL, REDIRECT_URI
 from authlib.integrations.flask_client import OAuth
+import re
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
@@ -22,6 +23,15 @@ authorize_url='https://github.com/login/oauth/authorize',
 api_base_url='https://api.github.com/',
 client_kwargs={'scope': 'user:email'},
 )
+
+def validate_password(password):
+    if len(password) < 12:
+        return False, "Password must be at least 12 characters long."
+    if not re.search(r"[A-Z]", password):
+        return False, "Password must contain at least one uppercase letter."
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        return False, "Password must contain at least one special character."
+    return True, ""
 
 @app.route('/')
 def index():
@@ -147,6 +157,17 @@ def register():
         last_name = request.form.get('lname')
         email = request.form.get('mail')
         password = request.form.get('psw')
+        confirm_password = request.form.get('cpsw')
+
+        # valid password check
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for('register'))
+
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            flash(message)
+            return redirect(url_for('register'))
 
         # Call backend to create a new user
         response = requests.post(f"{BACKEND_URL}/api/signup", json={
@@ -181,6 +202,17 @@ def changePassword():
     if request.method == 'POST':
         email = request.form.get('mail')
         password = request.form.get('newpsw')
+        confirm_password = request.form.get('cpsw')
+
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for('changePassword'))
+
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            flash(message)
+            return redirect(url_for('changePassword'))
+
         response = requests.post(f"{BACKEND_URL}/api/changePassword", json={
             "email": email,
             "password": password
