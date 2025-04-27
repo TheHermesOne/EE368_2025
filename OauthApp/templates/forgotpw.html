@@ -44,6 +44,10 @@
         border: 1px solid #ccc;
         box-sizing: border-box;
     }
+    .error {
+    color: red;
+    font-size: 14px;
+        }
   </style>
 
 <body>
@@ -54,10 +58,17 @@
         <input type="text" id="email" placeholder="Email used to create account" name="mail" required>
   <br> <br>
     <label for="newpsw"><b>New Password</b></label>
-    <input type="text" id="newpsw" placeholder="Create a new Password" name="newpsw" required>
-<br> <br>
+    <input type="password" id="newpsw" placeholder="Create a new Password" name="newpsw" required>
+
+
+    <div id="password-requirements" style="text-align: left; margin-top: 10px; font-size: 10px;">
+        <p id="length" style="color: gray;">• At least 12 characters</p>
+        <p id="uppercase" style="color: gray;">• At least one uppercase letter</p>
+        <p id="special" style="color: gray;">• At least one special character (!@#$%^&*(),.?\":{}|<>)</p>
+    </div>
+
     <label for="cpsw"><b>Confirm Password</b></label>
-    <input type="text" id="cpsw" placeholder=" Confirm New Password" name="newpsw" required>
+    <input type="password" id="cpsw" placeholder=" Confirm New Password" name="cnewpsw" required>
 
         <p id="error_message" class="error" style="display: none">Passwords Do Not Match!</p>
         <button type="submit">Reset Password</button>
@@ -71,19 +82,59 @@
 
     <script>
       function valid_psw() {
-    let newpsw = document.getElementById("newpsw").value;
-    let cpsw = document.getElementById("cpsw").value;
-    let errorMessage = document.getElementById("error_message");
+        let newpsw = document.getElementById("newpsw").value;
+        let cpsw = document.getElementById("cpsw").value;
+        let errorMessage = document.getElementById("error_message");
 
-    if (newpsw !== cpsw) {
-        errorMessage.style.display = "block";
-        return false; // Prevent form submission
-    } else {
+
         errorMessage.style.display = "none";
-        return true;
-    }
+        errorMessage.innerText = "";
+
+        if (newpsw !== cpsw) {
+            errorMessage.innerText = "Passwords do not match!";
+            errorMessage.style.display = "block";
+            return false;
+        }
+        if (newpsw.length < 12) {
+            errorMessage.innerText = "Password must be at least 12 characters long.";
+            errorMessage.style.display = "block";
+            return false;
+        }
+        if (!/[A-Z]/.test(newpsw)) {
+            errorMessage.innerText = "Password must contain at least one uppercase letter.";
+            errorMessage.style.display = "block";
+            return false;
+        }
+        if (!/[!@#$%^&*(),.?\":{}|<>]/.test(newpsw)) {
+            errorMessage.innerText = "Password must contain at least one special character.";
+            errorMessage.style.display = "block";
+            return false;
+        }
+        return true
 }
-    </script>
+
+document.getElementById("newpsw").addEventListener("input", function() {
+    let password = this.value;
+
+    if (password.length >= 12) {
+        document.getElementById("length").style.color = "green";
+    } else {
+        document.getElementById("length").style.color = "gray";
+    }
+
+    if (/[A-Z]/.test(password)) {
+        document.getElementById("uppercase").style.color = "green";
+    } else {
+        document.getElementById("uppercase").style.color = "gray";
+    }
+
+    if (/[!@#$%^&*(),.?\":{}|<>]/.test(password)) {
+        document.getElementById("special").style.color = "green";
+    } else {
+        document.getElementById("special").style.color = "gray";
+    }
+});
+</script>
 </body>
 
 </html>
