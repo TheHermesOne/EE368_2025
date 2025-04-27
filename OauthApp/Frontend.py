@@ -178,5 +178,27 @@ def changePassword():
             flash(data.get("message", "Password change failed"))
     return render_template('forgotpw.html')
 
+
+
+@app.route('/newnames', methods=['GET', 'POST'])
+def changePassword():
+    if request.method == 'POST':
+        email = request.form.get('mail')
+        fname = request.form.get('newfname')
+        lname = request.form.get('newlname')
+        response = requests.post(f"{BACKEND_URL}/api/newnames", json={
+            "email": email,
+            "fname": fname,
+            "lname": lname
+        })
+        data = response.json()
+        print(response.status_code)
+        if response.status_code == 200:
+            flash("name changes successful!")
+            return redirect(url_for('welcomepage'))
+        else:
+            flash(data.get("message", "name change failed"))
+    return render_template('newnames.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
