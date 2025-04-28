@@ -7,6 +7,7 @@ import json
 import os
 from OauthApp import GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_DISCOVERY_URL, REDIRECT_URI
 from authlib.integrations.flask_client import OAuth
+import re
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
@@ -23,10 +24,20 @@ api_base_url='https://api.github.com/',
 client_kwargs={'scope': 'user:email'},
 )
 
+def validate_password(password):
+    if len(password) < 12:
+        return False, "Password must be at least 12 characters long."
+    if not re.search(r"[A-Z]", password):
+        return False, "Password must contain at least one uppercase letter."
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
+        return False, "Password must contain at least one special character."
+    return True, ""
+
 @app.route('/')
 def index():
-    if 'UserData' in session and 'email' in session['UserData']:
-        return redirect(url_for('welcomepage',User = session['UserData']['first_name']))
+    user_data = session.get('UserData')
+    if user_data and user_data.get('first_name'):
+        return redirect(url_for('welcomepage', User=user_data['first_name']))
     else:
         return redirect(url_for('login'))
 
@@ -100,6 +111,14 @@ def callback():
         "userID": user_info.get("sub")
     }
 
+    requests.post(f"{BACKEND_URL}/api/oauth_login", json={
+        "email": user_info["email"],
+        "first_name": user_info.get("given_name", ""),
+        "last_name": user_info.get("family_name", ""),
+        "oauth_token": token_response.json()['access_token']
+
+    })
+
     return redirect(url_for('welcomepage', User=session['UserData']['first_name']))
 @app.route('/githubLogin')
 def githublogin():
@@ -122,7 +141,14 @@ def authorize():
        "userID": user_info["id"],
        "login": user_info.get("login", "")
    }
-   return redirect(url_for('welcomepage',User = session['userData']['login']))
+
+   requests.post(f"{BACKEND_URL}/api/oauth_login", json={
+       "email": user_info["email"],
+       "first_name": user_info.get("login", ""),  # use their GitHub username as first_name
+       "last_name": "",  # GitHub doesn't really give a last name separately
+       "oauth_token": token['access_token']
+   })
+   return redirect(url_for('welcomepage',User = session['UserData']['login']))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def register():
@@ -131,6 +157,17 @@ def register():
         last_name = request.form.get('lname')
         email = request.form.get('mail')
         password = request.form.get('psw')
+        confirm_password = request.form.get('cpsw')
+
+        # valid password check
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for('register'))
+
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            flash(message)
+            return redirect(url_for('register'))
 
         # Call backend to create a new user
         response = requests.post(f"{BACKEND_URL}/api/signup", json={
@@ -157,14 +194,34 @@ def welcomepage(User = None):
 
 @app.route('/logout')
 def logout():
-    session.pop('UserData', None)
+    user_data = session.get('UserData')
+    if user_data:
+        # Send a request to the backend to clear the user's token
+        try:
+            requests.post(f"{BACKEND_URL}/api/logout", json={"email": user_data.get("email")})
+        except Exception as e:
+            print(f"Error contacting backend during logout: {e}")
+
+    session.clear()
     return redirect(url_for('index'))
+
 
 @app.route('/changePassword', methods=['GET', 'POST'])
 def changePassword():
     if request.method == 'POST':
         email = request.form.get('mail')
         password = request.form.get('newpsw')
+        confirm_password = request.form.get('cpsw')
+
+        if password != confirm_password:
+            flash("Passwords do not match.")
+            return redirect(url_for('changePassword'))
+
+        is_valid, message = validate_password(password)
+        if not is_valid:
+            flash(message)
+            return redirect(url_for('changePassword'))
+
         response = requests.post(f"{BACKEND_URL}/api/changePassword", json={
             "email": email,
             "password": password
