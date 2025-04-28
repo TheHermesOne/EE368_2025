@@ -194,8 +194,17 @@ def welcomepage(User = None):
 
 @app.route('/logout')
 def logout():
+    user_data = session.get('UserData')
+    if user_data:
+        # Send a request to the backend to clear the user's token
+        try:
+            requests.post(f"{BACKEND_URL}/api/logout", json={"email": user_data.get("email")})
+        except Exception as e:
+            print(f"Error contacting backend during logout: {e}")
+
     session.clear()
     return redirect(url_for('index'))
+
 
 @app.route('/changePassword', methods=['GET', 'POST'])
 def changePassword():

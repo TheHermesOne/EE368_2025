@@ -107,5 +107,22 @@ def oauth_login():
     db.session.commit()
     return jsonify({"message": "OAuth user saved successfully"}), 200
 
+@app.route('/api/logout', methods=['POST'])
+def api_logout():
+    data = request.json
+    email = data.get('email')
+
+    if not email:
+        return jsonify({"message": "No email provided"}), 400
+
+    user = Users.query.filter_by(email=email).first()
+
+    if user:
+        user.oauth_token = None  # Clear the token
+        db.session.commit()
+        return jsonify({"message": "Logout successful"}), 200
+    else:
+        return jsonify({"message": "User not found"}), 404
+
 if __name__ == '__main__':
     app.run(debug=True)
