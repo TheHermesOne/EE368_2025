@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login Page</title>
+    <title>Create Account</title>
     <style>
         body {
-            background-color:#f1f1f1;
+            color: black;
+            background-color:white;
             background-image: url('https://www.shutterstock.com/image-vector/white-blue-gradient-clear-sky-600nw-2484094343.jpg');
             background-size: cover;
             background-repeat: no-repeat;
+            background-position: center;
             font-family: Arial, sans-serif;
             display: flex;
             flex-direction: column;
@@ -17,35 +17,53 @@
             height: 100vh;
             margin: 0;
         }
-         .container {
+        .container {
             background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 320px;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            max-width: 90%;
             text-align: center;
+            animation: fadeIn 1s ease;
         }
         button {
-            background-color: #228ad0;
+            background-color: midnightblue;
             color: white;
-            padding: 10px;
+            padding: 8px 8px;
+            margin: 2px 5px;
             border: none;
-            width: 100%;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: dodgerblue;
+        }
+        a {
+            text-decoration: none;
+        }
+        p {
+            margin: 8px 0;
+            font-size: 18px;
+            color: black;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
         }
         input[type=text], input[type=password] {
-            width: 100%;
-            padding: 12px 20px;
-            margin: 8px 0;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
+          width: 60%;
+          padding: 8px 8px;
+          margin: 0px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
         }
-        .error {
-            color: red;
-            font-size: 14px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -73,16 +91,16 @@
     <label for="psw"><b>Password</b></label>
     <input type="password" id="psw" placeholder="Create a Password" name="psw" required>
 
-    <div id="password-requirements" style="text-align: left; margin-top: 10px; font-size: 10px;">
-            <p id="length" style="color: gray;">• At least 12 characters</p>
-            <p id="uppercase" style="color: gray;">• At least one uppercase letter</p>
-            <p id="special" style="color: gray;">• At least one special character (!@#$%^&*(),.?\":{}|<>)</p>
+    <h5>Password Requirements:</h5>
+    <div id="password-requirements" style="text-align: left; margin-top: 0px; font-size: 10px; color: black">
+            <p id="length" style="color: black;text-align: center;font-size: 12px;"> - must be at least 12 characters</p>
+            <p id="uppercase" style="color: black; text-align: center;font-size: 12px;"> - must have at least one uppercase letter</p>
+            <p id="special" style="color: black; text-align: center;font-size: 12px;"> - must have at least one special character (!@#$%^&*(),.?\":{}|<>)</p>
     </div>
-
     <label for="cpsw"><b>Confirm Password</b></label>
     <input type="password" id="cpsw" placeholder="Confirm Password" name="cpsw" required>
 
-     <br> <br>
+     <br>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% for message in messages %}
@@ -90,8 +108,8 @@
     {% endfor %}
   {% endif %}
     {% endwith %}
+     <br>
     <button type="submit">Create Account</button>
-
    </form>
    <a href="/login">
        <button type="submit">Log in to Existing Account</button>

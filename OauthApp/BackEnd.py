@@ -53,6 +53,8 @@ def api_login():
 
 
     if user and bcrypt.check_password_hash(user.password_hash, data['password']):
+        print("Logging in user:", user.first_name, user.last_name)  # <-- add this
+
         return make_response({
         'email': user.email,
         'first_name': user.first_name,
@@ -61,6 +63,21 @@ def api_login():
     },200)
     else:
         return jsonify({"message": "Invalid credentials"}), 401
+
+@app.route('/api/get_user_by_email', methods=['POST'])
+def get_user_by_email():
+    data = request.json
+    user = Users.query.filter_by(email=data['email']).first()
+    if user:
+        return make_response({
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'userID': user.id
+        }, 200)
+    else:
+        return jsonify({"message": "User not found"}), 404
+
 
 @app.route('/api/changePassword', methods=['POST'])
 def change_password():

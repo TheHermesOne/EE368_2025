@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Welcome Page</title>
+    <style>
+        body {
+            background-color:#f1f1f1;
+            background-image: url('https://www.shutterstock.com/image-vector/white-blue-gradient-clear-sky-600nw-2484094343.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            max-width: 90%;
+            text-align: center;
+            animation: fadeIn 1s ease;
+        }
+        button {
+            background-color: midnightblue;
+            color: white;
+            padding: 12px 24px;
+            margin: 10px 5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: dodgerblue;
+        }
+        a {
+            text-decoration: none;
+        }
+        p {
+            margin: 8px 0;
+            font-size: 18px;
+            color: #333;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
+
 <body>
+
+<div class="container">
+<img src="https://media.tenor.com/ybltK0OLjrAAAAAj/joel-spin.gif" class="corner-image">
+
 {% if user_data %}
     {% if user_data.first_name %}
         {% if user_data.last_name %}
@@ -20,7 +79,6 @@
 {% else %}
   <h1>Hello, Unknown User!</h1>
 {% endif %}
-<img src="https://media1.tenor.com/m/R5IECfIf34YAAAAd/fish-spinning.gif" alt="Bruh">
 <br>
 <a href="/logout">
   <button>
@@ -32,15 +90,17 @@
     Change Names
   </button>
 </a>
-<!-- 🛡️ Inactivity Auto-Logout Script -->
+    </div>
 <script>
+
+
 let inactivityTimer;
-const inactivityLimit = 30* 60 * 1000; // 30 minutes
+const inactivityLimit = 30* 60 * 1000; // logs out after 30 minutes
 
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-        alert("You have been inactive for 30 minutes. Logging out...");
+        alert("Logging out due to inactivity... (idle for 30 minutes)");
         window.location.href = "/logout";
     }, inactivityLimit);
 }

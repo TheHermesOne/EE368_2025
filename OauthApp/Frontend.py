@@ -104,13 +104,6 @@ def callback():
     user_info = userinfo_response.json()
 
     # Store user info in session
-    session['UserData'] = {
-        "email": user_info["email"],
-        "first_name": user_info.get("given_name", ""),
-        "last_name": user_info.get("family_name", ""),
-        "userID": user_info.get("sub")
-    }
-
     requests.post(f"{BACKEND_URL}/api/oauth_login", json={
         "email": user_info["email"],
         "first_name": user_info.get("given_name", ""),
@@ -118,6 +111,19 @@ def callback():
         "oauth_token": token_response.json()['access_token']
 
     })
+    backend_response = requests.post(f"{BACKEND_URL}/api/get_user_by_email", json={
+        "email": user_info["email"],
+        "password": ""  # OAuth users don't have password, maybe modify /api/login to allow token auth
+    })
+    if backend_response.status_code == 200:
+        session['UserData'] = backend_response.json()
+    else:
+        session['UserData'] = {
+            "email": user_info["email"],
+            "first_name": user_info.get("given_name", ""),
+            "last_name": user_info.get("family_name", ""),
+            "userID": user_info.get("sub")
+        }
 
     return redirect(url_for('welcomepage', User=session['UserData']['first_name']))
 @app.route('/githubLogin')
@@ -127,28 +133,40 @@ def githublogin():
 
 @app.route('/login/callback')
 def authorize():
-   token = github.authorize_access_token()
-   resp = github.get('user', token=token)
-   emailresp = github.get('user/emails', token=token)
-   email = emailresp.json()
-   user_info = resp.json()
-   primary_email = next((e['email'] for e in email if e.get('primary')), None)
-   user_info['email'] = primary_email
-   session['UserData'] = {
-       "email": user_info['email'],
-       "first_name": user_info.get("name", ""),
-       "last_name": "",
-       "userID": user_info["id"],
-       "login": user_info.get("login", "")
-   }
+    token = github.authorize_access_token()
+    resp = github.get('user', token=token)
+    emailresp = github.get('user/emails', token=token)
+    email = emailresp.json()
+    user_info = resp.json()
+    primary_email = next((e['email'] for e in email if e.get('primary')), None)
+    user_info['email'] = primary_email
 
-   requests.post(f"{BACKEND_URL}/api/oauth_login", json={
-       "email": user_info["email"],
-       "first_name": user_info.get("login", ""),  # use their GitHub username as first_name
-       "last_name": "",  # GitHub doesn't really give a last name separately
-       "oauth_token": token['access_token']
-   })
-   return redirect(url_for('welcomepage',User = session['UserData']['login']))
+    # Still post to oauth_login to register/update user
+    requests.post(f"{BACKEND_URL}/api/oauth_login", json={
+        "email": user_info["email"],
+        "first_name": user_info.get("login", ""),  # using GitHub username as first name
+        "last_name": "",
+        "oauth_token": token['access_token']
+    })
+
+    # ⚡ NEW: fetch user info from YOUR backend
+    backend_response = requests.post(f"{BACKEND_URL}/api/get_user_by_email", json={
+        "email": user_info["email"]
+    })
+
+    if backend_response.status_code == 200:
+        session['UserData'] = backend_response.json()
+    else:
+        # fallback if backend fails
+        session['UserData'] = {
+            "email": user_info["email"],
+            "first_name": user_info.get("name", ""),
+            "last_name": "",
+            "userID": user_info["id"],
+            "login": user_info.get("login", "")
+        }
+
+    return redirect(url_for('welcomepage', User=session['UserData']['first_name']))
 
 @app.route('/signup', methods=['GET', 'POST'])
 def register():
