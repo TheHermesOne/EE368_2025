@@ -251,11 +251,16 @@ def newnames():
         data = response.json()
         print(response.status_code)
         if response.status_code == 200:
-            flash("name changes successful!")
-            return redirect(url_for('welcomepage'))
+            if 'UserData' in session:
+                session['UserData']['first_name'] = fname
+                session['UserData']['last_name'] = lname
+
+            flash("Name changes successful!")
+            return redirect(url_for('welcomepage', User=fname))
         else:
-            flash(data.get("message", "name change failed"))
+            flash(data.get("message", "Name change failed"))
     return render_template('newnames.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

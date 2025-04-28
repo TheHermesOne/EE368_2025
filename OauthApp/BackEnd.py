@@ -124,5 +124,18 @@ def api_logout():
     else:
         return jsonify({"message": "User not found"}), 404
 
+@app.route('/api/newnames', methods=['POST'])
+def new_names():
+    data = request.json
+
+    existing_user = Users.query.filter_by(email=data['email']).first()
+    if existing_user:
+        existing_user.first_name = data['fname']
+        existing_user.last_name = data['lname']
+        db.session.commit()
+        return jsonify({"message": "Name changes were successful"}), 200
+    else:
+        return jsonify({"message": "No Email registered"}), 400
+
 if __name__ == '__main__':
     app.run(debug=True)
