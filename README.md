@@ -33,3 +33,4 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+To successfully use this application you must have an email to register an account or a Google/Github to log in with a third party provider.
