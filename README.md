@@ -16,10 +16,13 @@ flask --app .\OauthApp\ --run
 
 To link the My SQL to your personal application you must go into the INIT.py file and write your username and password for your My SQL account. Then in your command prompt of SQL type the following commands.
 
+```
 CREATE DATABASE flask_db;
-
+```
+```
 USE flask_db;
-
+```
+```
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50),
@@ -29,3 +32,4 @@ CREATE TABLE users (
     Oauth_token VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
