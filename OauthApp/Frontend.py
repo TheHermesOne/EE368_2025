@@ -11,7 +11,7 @@ import re
 
 client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
-BACKEND_URL = "http://127.0.0.1:5000"  # Ensure your backend runs on this URL
+BACKEND_URL = "http://127.0.0.1:5000"  #backend runs on this URL
 
 oauth = OAuth(app)
 github = oauth.register(
@@ -113,7 +113,7 @@ def callback():
     })
     backend_response = requests.post(f"{BACKEND_URL}/api/get_user_by_email", json={
         "email": user_info["email"],
-        "password": ""  # OAuth users don't have password, maybe modify /api/login to allow token auth
+        "password": ""  
     })
     if backend_response.status_code == 200:
         session['UserData'] = backend_response.json()
@@ -144,12 +144,12 @@ def authorize():
     # Still post to oauth_login to register/update user
     requests.post(f"{BACKEND_URL}/api/oauth_login", json={
         "email": user_info["email"],
-        "first_name": user_info.get("login", ""),  # using GitHub username as first name
+        "first_name": user_info.get("login", ""),  
         "last_name": "",
         "oauth_token": token['access_token']
     })
 
-    # ⚡ NEW: fetch user info from YOUR backend
+
     backend_response = requests.post(f"{BACKEND_URL}/api/get_user_by_email", json={
         "email": user_info["email"]
     })
@@ -177,7 +177,6 @@ def register():
         password = request.form.get('psw')
         confirm_password = request.form.get('cpsw')
 
-        # valid password check
         if password != confirm_password:
             flash("Passwords do not match.")
             return redirect(url_for('register'))
@@ -187,7 +186,6 @@ def register():
             flash(message)
             return redirect(url_for('register'))
 
-        # Call backend to create a new user
         response = requests.post(f"{BACKEND_URL}/api/signup", json={
             'first_name': first_name,
             "last_name": last_name,
